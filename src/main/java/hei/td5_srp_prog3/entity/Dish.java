@@ -1,4 +1,102 @@
 package hei.td5_srp_prog3.entity;
 
+
+import hei.td5_srp_prog3.type.DishTypeEnum;
+
+import java.util.List;
+
 public class Dish {
+    private Integer id;
+    private String name;
+    private DishTypeEnum dishType;
+    private Double sellingPrice;
+    private List<DishIngredient> dishIngredients;
+
+
+    public Dish(){}
+
+    public Dish(String name, DishTypeEnum dishType, List<DishIngredient> dishIngredients) {
+        this.name = name;
+        this.dishType = dishType;
+        this.dishIngredients = dishIngredients;
+    }
+
+    public Double getDishCost(){
+        return dishIngredients == null? null: dishIngredients.stream()
+                .mapToDouble(di -> di.getQuantity() * di.getIngredient().getPrice())
+                .sum();
+    };
+
+
+
+    public Double getGrossMargin(){
+        if(getSellingPrice() == null){
+            throw new RuntimeException("Error : Selling Price doesn't have value yet, impossible to get the marge");
+        }
+
+        return getSellingPrice() - getDishCost();
+    }
+
+    public Double getSellingPrice() {
+        return sellingPrice;
+    }
+
+    public void setSellingPrice(Double sellingPrice) {
+        this.sellingPrice = sellingPrice;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public DishTypeEnum getDishType() {
+        return dishType;
+    }
+
+    public void setDishType(DishTypeEnum dishType) {
+        this.dishType = dishType;
+    }
+
+    public List<DishIngredient> getDishIngredients() {
+        return dishIngredients;
+    }
+
+    public void setDishIngredients(List<DishIngredient> dishIngredients) {
+        this.dishIngredients = dishIngredients;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Dish dish = (Dish) o;
+        return Objects.equals(id, dish.id) && Objects.equals(name, dish.name) && dishType == dish.dishType && Objects.equals(dishIngredients, dish.dishIngredients);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, dishType, dishIngredients);
+    }
+
+    @Override
+    public String toString() {
+        return "Dish{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sellingPrice=" + sellingPrice +
+                ", dishType=" + dishType +
+                ", listDishIngredients=" + dishIngredients +
+                '}';
+    }
 }
