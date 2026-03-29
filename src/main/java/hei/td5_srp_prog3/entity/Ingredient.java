@@ -1,5 +1,10 @@
 package hei.td5_srp_prog3.entity;
 
+import hei.td5_srp_prog3.type.CategoryEnum;
+
+import java.time.Instant;
+import java.util.List;
+
 public class Ingredient {
     private Integer id;
     private String name;
@@ -9,7 +14,6 @@ public class Ingredient {
 
     public Ingredient() {}
 
-    // ✅ Corrigé : utilise l'unité des mouvements, pas hardcodé KG
     public StockValue getStockValueAt(Instant t, Unit requestedUnit) {
         List<StockMovement> filtered = stockMovementList.stream()
                 .filter(stm -> !stm.getCreationDateTime().isAfter(t))
@@ -26,11 +30,10 @@ public class Ingredient {
 
         StockValue stockValue = new StockValue();
         stockValue.setQuantity(quantityValue);
-        stockValue.setUnit(requestedUnit); // ✅ utilise le paramètre
+        stockValue.setUnit(requestedUnit);
         return stockValue;
     }
 
-    // --- getters / setters (identiques à avant) ---
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
     public String getName() { return name; }
