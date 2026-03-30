@@ -4,6 +4,7 @@ package hei.td5_srp_prog3.entity;
 import hei.td5_srp_prog3.type.DishTypeEnum;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Dish {
     private Integer id;

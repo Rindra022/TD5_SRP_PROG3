@@ -1,6 +1,7 @@
 package hei.td5_srp_prog3.entity;
 
-import Rindra.type.Unit;
+
+import hei.td5_srp_prog3.type.Unit;
 
 public class DishIngredient {
     private Dish dish;

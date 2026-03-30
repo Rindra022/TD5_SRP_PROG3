@@ -65,3 +65,6 @@ alter table stock_movement
 alter table ingredient
     add column if not exists stock numeric(10,2)
         not null default 0.00;
+
+ALTER TABLE dish
+    ADD COLUMN IF NOT EXISTS selling_price NUMERIC(10, 2);

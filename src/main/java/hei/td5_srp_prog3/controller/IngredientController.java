@@ -1,6 +1,14 @@
 package hei.td5_srp_prog3.controller;
 
 
+import hei.td5_srp_prog3.dto.IngredientDTO;
+import hei.td5_srp_prog3.dto.StockValueDTO;
+import hei.td5_srp_prog3.service.IngredientService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/ingredients")
 public class IngredientController {

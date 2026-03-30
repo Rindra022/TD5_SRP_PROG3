@@ -1,5 +1,13 @@
 package hei.td5_srp_prog3.controller;
 
+import hei.td5_srp_prog3.dto.DishDTO;
+import hei.td5_srp_prog3.dto.DishIngredientRequest;
+import hei.td5_srp_prog3.service.DishService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/dishes")
 public class DishController {

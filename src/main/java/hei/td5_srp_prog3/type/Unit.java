@@ -1,4 +1,5 @@
 package hei.td5_srp_prog3.type;
 
-public class Unit {
+public enum Unit {
+    KG, PCS, L
 }

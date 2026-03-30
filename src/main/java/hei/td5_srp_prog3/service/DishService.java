@@ -1,5 +1,22 @@
 package hei.td5_srp_prog3.service;
 
+import hei.td5_srp_prog3.dto.DishDTO;
+import hei.td5_srp_prog3.dto.DishIngredientRequest;
+import hei.td5_srp_prog3.dto.IngredientDTO;
+import hei.td5_srp_prog3.entity.Dish;
+import hei.td5_srp_prog3.entity.DishIngredient;
+import hei.td5_srp_prog3.entity.Ingredient;
+import hei.td5_srp_prog3.exception.BadRequestException;
+import hei.td5_srp_prog3.exception.ResourceNotFoundException;
+import hei.td5_srp_prog3.repository.DishRepository;
+import hei.td5_srp_prog3.repository.IngredientRepository;
+import hei.td5_srp_prog3.type.Unit;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class DishService {
 

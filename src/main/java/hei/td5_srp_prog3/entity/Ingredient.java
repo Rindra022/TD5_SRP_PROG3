@@ -1,9 +1,12 @@
 package hei.td5_srp_prog3.entity;
 
 import hei.td5_srp_prog3.type.CategoryEnum;
+import hei.td5_srp_prog3.type.MovementTypeEnum;
+import hei.td5_srp_prog3.type.Unit;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 public class Ingredient {
     private Integer id;
@@ -13,23 +16,23 @@ public class Ingredient {
     private List<StockMovement> stockMovementList;
 
     public Ingredient() {}
-
     public StockValue getStockValueAt(Instant t, Unit requestedUnit) {
         List<StockMovement> filtered = stockMovementList.stream()
                 .filter(stm -> !stm.getCreationDateTime().isAfter(t))
+                .filter(stm -> stm.getValue().getUnit() == requestedUnit) // ← ajoute ça
                 .toList();
 
-        double quantityValue = 0.0;
+        double quantity = 0.0;
         for (StockMovement sm : filtered) {
             if (sm.getType() == MovementTypeEnum.IN) {
-                quantityValue += sm.getValue().getQuantity();
+                quantity += sm.getValue().getQuantity();
             } else if (sm.getType() == MovementTypeEnum.OUT) {
-                quantityValue -= sm.getValue().getQuantity();
+                quantity -= sm.getValue().getQuantity();
             }
         }
 
         StockValue stockValue = new StockValue();
-        stockValue.setQuantity(quantityValue);
+        stockValue.setQuantity(quantity);
         stockValue.setUnit(requestedUnit);
         return stockValue;
     }
