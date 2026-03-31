@@ -2,8 +2,11 @@ package hei.td5_srp_prog3.controller;
 
 
 import hei.td5_srp_prog3.dto.IngredientDTO;
+import hei.td5_srp_prog3.dto.StockMovementCreateRequest;
+import hei.td5_srp_prog3.dto.StockMovementDTO;
 import hei.td5_srp_prog3.dto.StockValueDTO;
 import hei.td5_srp_prog3.service.IngredientService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,5 +39,25 @@ public class IngredientController {
             @RequestParam(required = false) String unit) {
 
         return ResponseEntity.ok(ingredientService.getStockAt(id, at, unit));
+    }
+
+    // f) GET /ingredients/{id}/stockMovements?from=...&to=...
+    @GetMapping("/{id}/stockMovements")
+    public ResponseEntity<List<StockMovementDTO>> getStockMovements(
+            @PathVariable Integer id,
+            @RequestParam(required = false) String from,
+            @RequestParam(required = false) String to) {
+
+        return ResponseEntity.ok(ingredientService.getStockMovements(id, from, to));
+    }
+
+    // g) POST /ingredients/{id}/stockMovements
+    @PostMapping("/{id}/stockMovements")
+    public ResponseEntity<List<StockMovementDTO>> addStockMovements(
+            @PathVariable Integer id,
+            @RequestBody(required = false) List<StockMovementCreateRequest> body) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ingredientService.addStockMovements(id, body));
     }
 }

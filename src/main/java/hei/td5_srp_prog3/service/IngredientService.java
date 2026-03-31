@@ -1,6 +1,8 @@
 package hei.td5_srp_prog3.service;
 
 import hei.td5_srp_prog3.dto.IngredientDTO;
+import hei.td5_srp_prog3.dto.StockMovementCreateRequest;
+import hei.td5_srp_prog3.dto.StockMovementDTO;
 import hei.td5_srp_prog3.dto.StockValueDTO;
 import hei.td5_srp_prog3.entity.Ingredient;
 import hei.td5_srp_prog3.entity.StockMovement;
@@ -75,4 +77,69 @@ public class IngredientService {
     private IngredientDTO toDTO(Ingredient i) {
         return new IngredientDTO(i.getId(), i.getName(), i.getCategory().name(), i.getPrice());
     }
+
+
+    // f) GET /ingredients/{id}/stockMovements?from=...&to=...
+    public List<StockMovementDTO> getStockMovements(
+            Integer id, String fromParam, String toParam) {
+
+        if (fromParam == null || toParam == null) {
+            throw new BadRequestException(
+                    "Either mandatory query parameter `from` or `to` is not provided.");
+        }
+
+        // Validation de l'ingrédient
+        ingredientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Ingredient.id=" + id + " is not found"));
+
+        Instant from;
+        Instant to;
+        try {
+            from = LocalDateTime.parse(fromParam, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                    .toInstant(ZoneOffset.UTC);
+            to = LocalDateTime.parse(toParam, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                    .toInstant(ZoneOffset.UTC);
+        } catch (DateTimeParseException e) {
+            throw new BadRequestException(
+                    "Format de date invalide. Utilisez : yyyy-MM-ddTHH:mm:ss");
+        }
+
+        return ingredientRepository
+                .findStockMovementsByIngredientIdAndDateRange(id, from, to)
+                .stream()
+                .map(this::toStockMovementDTO)
+                .toList();
+    }
+
+    // g) POST /ingredients/{id}/stockMovements
+    public List<StockMovementDTO> addStockMovements(
+            Integer id, List<StockMovementCreateRequest> requests) {
+
+        if (requests == null || requests.isEmpty()) {
+            throw new BadRequestException("Le corps de la requête est obligatoire.");
+        }
+
+        // Validation de l'ingrédient
+        ingredientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Ingredient.id=" + id + " is not found"));
+
+        return ingredientRepository.saveStockMovements(id, requests)
+                .stream()
+                .map(this::toStockMovementDTO)
+                .toList();
+    }
+
+    // Conversion entité → DTO
+    private StockMovementDTO toStockMovementDTO(StockMovement sm) {
+        return new StockMovementDTO(
+                sm.getId(),
+                sm.getCreationDateTime(),
+                sm.getValue().getUnit().name(),
+                sm.getValue().getQuantity(),
+                sm.getType().name()
+        );
+    }
+
 }

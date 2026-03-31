@@ -2,15 +2,18 @@ package hei.td5_srp_prog3.repository;
 
 
 import hei.td5_srp_prog3.configuration.DataSource;
+import hei.td5_srp_prog3.dto.StockMovementCreateRequest;
 import hei.td5_srp_prog3.entity.Ingredient;
 import hei.td5_srp_prog3.entity.StockMovement;
 import hei.td5_srp_prog3.entity.StockValue;
+import hei.td5_srp_prog3.exception.BadRequestException;
 import hei.td5_srp_prog3.type.CategoryEnum;
 import hei.td5_srp_prog3.type.MovementTypeEnum;
 import hei.td5_srp_prog3.type.Unit;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -106,4 +109,82 @@ public class IngredientRepository {
 
         return sm;
     }
+
+    // f) GET — filtre par plage de dates
+    public List<StockMovement> findStockMovementsByIngredientIdAndDateRange(
+            Integer ingredientId, Instant from, Instant to) {
+
+        String sql = """
+            SELECT id, quantity, unit, type, creation_datetime
+            FROM stock_movement
+            WHERE id_ingredient = ?
+              AND creation_datetime >= ?
+              AND creation_datetime <= ?
+            ORDER BY creation_datetime
+            """;
+
+        Connection conn = dataSource.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, ingredientId);
+            ps.setTimestamp(2, Timestamp.from(from));
+            ps.setTimestamp(3, Timestamp.from(to));
+            ResultSet rs = ps.executeQuery();
+            List<StockMovement> movements = new ArrayList<>();
+            while (rs.next()) {
+                movements.add(mapStockMovement(rs));
+            }
+            return movements;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            dataSource.closeConnection(conn);
+        }
+    }
+
+    // g) POST — sauvegarde une liste de mouvements
+    public List<StockMovement> saveStockMovements(
+            Integer ingredientId, List<StockMovementCreateRequest> requests) {
+
+        if (requests == null || requests.isEmpty()) {
+            throw new BadRequestException("Le corps de la requête est obligatoire.");
+        }
+
+        String sql = """
+            INSERT INTO stock_movement (id_ingredient, quantity, unit, type, creation_datetime)
+            VALUES (?, ?, ?::unit_type, ?::mouvement_type, ?)
+            RETURNING id, quantity, unit, type, creation_datetime
+            """;
+
+        List<StockMovement> saved = new ArrayList<>();
+        Connection conn = dataSource.getConnection();
+
+        try {
+            conn.setAutoCommit(false);
+            for (StockMovementCreateRequest req : requests) {
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setInt(1, ingredientId);
+                    ps.setDouble(2, req.getValue());
+                    ps.setString(3, req.getUnit().toUpperCase());
+                    ps.setString(4, req.getType().toUpperCase());
+                    ps.setTimestamp(5, Timestamp.from(Instant.now()));
+
+                    ResultSet rs = ps.executeQuery();
+                    if (rs.next()) {
+                        saved.add(mapStockMovement(rs));
+                    }
+                }
+            }
+            conn.commit();
+            return saved;
+        } catch (SQLException e) {
+            try { conn.rollback(); } catch (SQLException ex) { throw new RuntimeException(ex); }
+            throw new RuntimeException(e);
+        } finally {
+            dataSource.closeConnection(conn);
+        }
+    }
+
+
+
+
 }

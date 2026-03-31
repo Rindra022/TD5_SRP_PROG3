@@ -7,7 +7,7 @@ GET http://localhost:8080/ingredients/1
 Accept: application/json
 
 ### GET ingrédient introuvable → 404
-GET http://localhost:8080/ingredients/999
+GET http://localhost:8080/ingredients/99
 Accept: application/json
 
 ### GET stock d'un ingrédient
@@ -64,4 +64,30 @@ Content-Type: application/json
     "quantityRequired": 0.20,
     "unit": "KG"
   }
+]
+
+
+### GET mouvements de stock filtrés par date
+GET http://localhost:8080/ingredients/1/stockMovements?from=2024-01-05T00:00:00&to=2024-01-06T23:59:59
+Accept: application/json
+
+### GET mouvements — ingrédient introuvable → 404
+GET http://localhost:8080/ingredients/999/stockMovements?from=2024-01-05T00:00:00&to=2024-01-06T23:59:59
+Accept: application/json
+
+### POST ajouter des mouvements de stock
+POST http://localhost:8080/ingredients/1/stockMovements
+Content-Type: application/json
+
+[
+  {"unit": "KG", "value": 3.0, "type": "IN"},
+  {"unit": "KG", "value": 1.5, "type": "OUT"}
+]
+
+### POST — ingrédient introuvable → 404
+POST http://localhost:8080/ingredients/999/stockMovements
+Content-Type: application/json
+
+[
+  {"unit": "KG", "value": 3.0, "type": "IN"}
 ]
