@@ -1,10 +1,14 @@
 package hei.td5_srp_prog3.entity;
 
 import hei.td5_srp_prog3.type.MovementTypeEnum;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.Objects;
 
+@Setter
+@Getter
 public class StockMovement {
     private Integer id;
     private StockValue value;
@@ -12,38 +16,6 @@ public class StockMovement {
     private Instant creationDateTime;
 
     public StockMovement(){}
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public StockValue getValue() {
-        return value;
-    }
-
-    public void setValue(StockValue value) {
-        this.value = value;
-    }
-
-    public MovementTypeEnum getType() {
-        return type;
-    }
-
-    public void setType(MovementTypeEnum type) {
-        this.type = type;
-    }
-
-    public Instant getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public void setCreationDateTime(Instant creationDateTime) {
-        this.creationDateTime = creationDateTime;
-    }
 
     @Override
     public boolean equals(Object o) {

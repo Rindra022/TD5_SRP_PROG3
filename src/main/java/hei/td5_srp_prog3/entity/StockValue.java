@@ -1,28 +1,16 @@
 package hei.td5_srp_prog3.entity;
 
 import hei.td5_srp_prog3.type.Unit;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
+@Setter
+@Getter
 public class StockValue {
     private Double quantity;
     private Unit unit;
-
-    public Double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-
-    public Unit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(Unit unit) {
-        this.unit = unit;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -3,11 +3,15 @@ package hei.td5_srp_prog3.entity;
 import hei.td5_srp_prog3.type.CategoryEnum;
 import hei.td5_srp_prog3.type.MovementTypeEnum;
 import hei.td5_srp_prog3.type.Unit;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
+@Setter
+@Getter
 public class Ingredient {
     private Integer id;
     private String name;
@@ -36,17 +40,6 @@ public class Ingredient {
         stockValue.setUnit(requestedUnit);
         return stockValue;
     }
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
-    public CategoryEnum getCategory() { return category; }
-    public void setCategory(CategoryEnum category) { this.category = category; }
-    public List<StockMovement> getStockMovementList() { return stockMovementList; }
-    public void setStockMovementList(List<StockMovement> list) { this.stockMovementList = list; }
 
     @Override
     public boolean equals(Object o) {
