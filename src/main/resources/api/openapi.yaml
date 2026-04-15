@@ -64,6 +64,24 @@ paths:
         '404':
           $ref: '#/components/responses/IngredientNotFound'
 
+  /dishes:
+    get:
+      tags:
+        - Dishes
+      description: List of dishes with their ingredients composing
+      responses:
+        '200':
+          description: List of dishes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dish'
+        '404':
+          $ref: '#/components/responses/DishNotFound'
+
+
 components:
   parameters:
     IdParam:
@@ -103,6 +121,14 @@ components:
           schema:
             type: string
             example: "Ingredient.id=4 is not found"
+
+    DishNotFound:
+      description: Dish not found
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: "Dish.id=8 is not found"
 
   schemas:
     CategoryEnum:
@@ -147,6 +173,24 @@ components:
           type: number
           format: double
           example: 9.2
+
+    Dish:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: Riz aux légumes
+        sellingPrice:
+          type: number
+          format: double
+          example: 108.5
+        listIngredient:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
 
     StockValue:
       type: object
