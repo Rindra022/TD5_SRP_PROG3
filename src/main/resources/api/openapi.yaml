@@ -1,9 +1,79 @@
 openapi: 3.1.0
 info:
-  title: Title
-  description: Title
+  title: Ingredient OAS
+  description: Ingredient OAS
   version: 1.0.0
 servers:
-  - url: 'https'
+  - url: 'https//localhost:8080'
+
+tags:
+  - name: Ingredients
+  - name: Dishes
+
 paths:
+  /ingredients:
+    get:
+      tags:
+        - Ingredients
+      description: Return list of ingredients
+      responses:
+        '200':
+          description: List of ingredients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+
+
+
+components:
+  schemas:
+    CategoryEnum:
+      type: string
+      enum:
+        - VEGETABLE
+        - ANIMAL
+        - MARINE
+        - DAIRY
+        - OTHER
+      example: ANIMAL
+
+    DishTypeEnum:
+      type: string
+      enum:
+        - START
+        - MAIN
+        - STARTER
+        - DESSERT
+      example: STARTER
+    UnitType:
+      type: string
+      enum:
+        - KG
+        - PCS
+        - L
+      example: KG
+
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: poulet
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        price:
+          type: number
+          format: double
+          example: 9.2
+
+
+
+
+
   
