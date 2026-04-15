@@ -43,6 +43,26 @@ paths:
         '404':
           $ref: '#/components/responses/IngredientNotFound'
 
+  /ingredients/{id}/stock:
+    get:
+      tags:
+        - Ingredients
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+        - $ref: '#/components/parameters/TemporalAt'
+        - $ref: '#/components/parameters/Unit'
+      description: The stock value for the ingredient with the provided identifier at the specified time and unit
+      responses:
+        '200':
+          description: Stock value of the ingredient with {id} at a moment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockValue'
+        '400':
+          $ref: '#/components/responses/BadParamRequest'
+        '404':
+          $ref: '#/components/responses/IngredientNotFound'
 
 components:
   parameters:
@@ -52,8 +72,30 @@ components:
       required: true
       schema:
         type: integer
+    TemporalAt:
+      name: at
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date-time
+        example: "2024-01-06T12:00:00Z"
+    Unit:
+      name: unit
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/UnitType'
 
   responses:
+    BadParamRequest:
+      description : Parameter Missing
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: "Either mandatory query parameter `at` or `unit` is not provided."
+
     IngredientNotFound:
       description: Ingredient not found
       content:
@@ -81,6 +123,7 @@ components:
         - STARTER
         - DESSERT
       example: STARTER
+
     UnitType:
       type: string
       enum:
@@ -104,6 +147,16 @@ components:
           type: number
           format: double
           example: 9.2
+
+    StockValue:
+      type: object
+      properties:
+        value:
+          type: number
+          format: float
+          example: 24.3
+        unit:
+          $ref: '#/components/schemas/UnitType'
 
 
 
