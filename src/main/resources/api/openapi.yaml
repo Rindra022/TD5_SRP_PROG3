@@ -26,7 +26,24 @@ paths:
                 items:
                   $ref: '#/components/schemas/Ingredient'
 
-
+  /ingredients/{id}:
+    get:
+      tags:
+        - Ingredients
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      description: Return an ingredient with id as parameter
+      responses:
+        '200':
+          description: Ingredient with id parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
 
 components:
   schemas:
