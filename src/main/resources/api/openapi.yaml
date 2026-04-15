@@ -31,21 +31,37 @@ paths:
       tags:
         - Ingredients
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/IdParam'
       description: Return an ingredient with id as parameter
       responses:
         '200':
-          description: Ingredient with id parameter
+          description: Ingredient with his id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Ingredient'
+        '404':
+          $ref: '#/components/responses/IngredientNotFound'
+
 
 components:
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  responses:
+    IngredientNotFound:
+      description: Ingredient not found
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: "Ingredient.id=4 is not found"
+
   schemas:
     CategoryEnum:
       type: string
